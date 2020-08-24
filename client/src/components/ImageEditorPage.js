@@ -129,7 +129,7 @@ const ImageEditorPage = (props) => {
       canvas.add(image);   
   }
   
-
+console.log("canvas", canvas)
     return function cleanupCanvas() {
         canvas.dispose();
         console.log("canvas dispose")
