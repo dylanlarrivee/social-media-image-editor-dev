@@ -3,6 +3,9 @@ import { fabric } from "fabric";
 import dogImage from "../images/dog-image.jpeg";
 import dogImage2 from "../images/dog-image-2.jpeg";
 import dogImage3 from "../images/dog-image-3.jpeg";
+import squarePlus from "../images/square-plus.svg";
+import smallDiamond from "../images/small-diamond.svg";
+import smallDuck from "../images/small-duck.svg";
 
 const imgObject = {
     "dogImage" : dogImage,
@@ -10,10 +13,17 @@ const imgObject = {
     "dogImage3" : dogImage3
 }
 
+const overlayObject = {
+  "squarePlus" : squarePlus,
+  "smallDiamond" : smallDiamond,
+  "smallDuck" : smallDuck
+}
+
 const ImageEditorPage = (props) => {
   const [backgroundImage, setBackgroundImage] = useState("");
   const [canvasLoaded, setCanvasLoaded] = useState(false);
   const [overlayText1, setOverlayText1] = useState("");
+  const [overlayImage, setOverlayImage] = useState("");
   const [overlayText1Indicator, setOverlayText1Indicator] = useState(false);
   const [finalImageDownloadLink, setFinalImageDownloadLink] = useState("");
 
@@ -30,9 +40,17 @@ const ImageEditorPage = (props) => {
 
   const updateBackgroundImagePreSelected = (event) => {
     setBackgroundImage(imgObject[event.target.value])
+    console.log(backgroundImage)
+    console.log(event.target.value)
 
   };
+  
+  const updateOverlayImagePreSelected = (event) => {
+    setOverlayImage(overlayObject[event.target.value])
+    console.log(overlayImage)
+    console.log(event.target.value)
 
+  };
 
   const addOverlayText1 = (canvas) => {
     setOverlayText1Indicator(true)
@@ -82,6 +100,36 @@ const ImageEditorPage = (props) => {
       // hasRotatingPoint: true,
     });
     canvas.add(itext);
+
+
+  //   var imgInstance = new fabric.Image.fromURL("https://cdn.worldvectorlogo.com/logos/instagram-circle.svg", function(img) {
+  //     img.set({
+  //     left: 0,
+  //     top: 0,
+  //     angle: 0,
+  //     opacity: 0.75,
+  //     width:50,
+  //     height:50
+  //   });
+  // });
+  //   canvas.add(imgInstance);   
+  var imgObj = new Image();
+  imgObj.src = overlayImage;
+  imgObj.onload = function () 
+  {
+      var image = new fabric.Image(imgObj);
+      image.set({
+          angle: 0,
+          padding: 0,
+          // originX: "center",
+          // originY: "center",
+          x: 50,
+          y: 50
+      });
+      canvas.add(image);   
+  }
+  
+
     return function cleanupCanvas() {
         canvas.dispose();
         console.log("canvas dispose")
@@ -90,25 +138,33 @@ const ImageEditorPage = (props) => {
         canvasElement.setAttribute('width', 400);
         canvasElement.setAttribute('height', 300);
     }
-  }, [overlayText1Indicator, backgroundImage]);
+  }, [overlayText1Indicator, backgroundImage, overlayImage]);
 
   
 
   return (
     <div>
-        <select name="cars" id="cars" onChange={updateBackgroundImagePreSelected}>
+        <select name="dogs" id="dogs" onChange={updateBackgroundImagePreSelected}>
         <option >Select an Image</option>
         <option value="dogImage">Dog image 1</option>
         <option value="dogImage2">Dog Image 2</option>
         <option value="dogImage3">Dog Image 3</option>
         </select>
-        <label htmlFor="cars" style={{ marginLeft: "25px" }}>Choose a pre loaded background image:</label>
+        <label htmlFor="dogs" style={{ marginLeft: "25px" }}>Choose a pre loaded background image:</label>
         <br /> <br />
       <input type="file" onChange={updateBackgroundImage} />
       <label className="controls__label" htmlFor="name">
         Or load a background image.
       </label>
       <br /> <br />
+      <select name="overlayImages" id="overlayImages" onChange={updateOverlayImagePreSelected}>
+        <option >Select an Image</option>
+        <option value="squarePlus">Square Plus</option>
+        <option value="smallDiamond">Small Diamond</option>
+        <option value="smallDuck">Small Duck</option>
+        </select>
+        <label htmlFor="overlayImages" style={{ marginLeft: "25px" }}>Add a pre loaded overlay:</label>
+        <br /> <br />
       <input
         id="overlayText1"
         name="overlayText1"
